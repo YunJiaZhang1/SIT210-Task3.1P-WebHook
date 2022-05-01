@@ -1,0 +1,31 @@
+#include <math.h>
+
+const int PULLUP_RES = 20000;
+
+const double BETA = 4390;
+
+const double THERMISTOR_RES = 100000;
+
+const double THERMISTOR_NOM_TEMP = 25;
+
+void setup() {
+
+}
+
+void loop() {
+    thermister_temp(analogRead(4))；
+    delay(1000);
+}
+
+void thermister_temp(int aval)
+{
+    double R, T;
+    
+    R = （double) PULLUP_RES / ((4095 / (double) aval ) -1 );
+    
+    T = 1 / (( 1 / (THERMISTOR_NOM_TEMP + 273.15)) + (( 1 / BETA ) * log ( R / THERMISTOR_RES ) ) );
+    
+    T -= 273.15;
+    
+    Spark.publish("Temperature", String(T) + " C");
+}
